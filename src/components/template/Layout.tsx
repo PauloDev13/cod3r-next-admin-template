@@ -10,10 +10,15 @@ interface LayoutProps {
 
 const Layout: NextPage<LayoutProps> = ({ titulo, subtitulo, children }) => {
   return (
-    <div>
+    <div className={`dark flex h-screen w-screen`}>
       <MenuLateral />
-      <Cabecalho titulo={titulo} subtitulo={subtitulo} />
-      <Conteudo>{children}</Conteudo>
+      <div
+        className={`flex flex-col w-full p-7
+          bg-gray-300 dark:bg-gray-800`}
+      >
+        <Cabecalho titulo={titulo} subtitulo={subtitulo} />
+        <Conteudo>{children}</Conteudo>
+      </div>
     </div>
   );
 };
