@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import AuthInput from '../components/auth/AuthInput';
 import { IconeAtencao } from '../components/icons';
+import useAuthData from '../data/hook/useAuthData';
 
 const Autenticacao = () => {
+  const { usuario, loginGoogle } = useAuthData();
+
   const [modo, setModo] = useState<'login' | 'cadastro'>('login');
   const [erro, setErro] = useState('');
   const [email, setEmail] = useState('');
@@ -45,9 +48,9 @@ const Autenticacao = () => {
         {erro && (
           <div
             className={`flex items-center
-            bg-red-400 text-white 
-            py-3 px-5 my-2 
-            border border-red-700 rounded-lg`}
+              bg-red-400 text-white 
+              py-3 px-5 my-2 
+              border border-red-700 rounded-lg`}
           >
             {IconeAtencao(7)}
             <span className={`ml-2`}>{erro}</span>
@@ -76,10 +79,10 @@ const Autenticacao = () => {
           obrigatorio={true}
           naoRenderizar={modo === 'login'}
         />
+
         <button
-          className={`
-        w-full bg-indigo-500 hover:bg-indigo-400
-        text-white rounded-lg px-4 py-3 mt-6`}
+          className={`w-full bg-indigo-500 hover:bg-indigo-400
+            text-white rounded-lg px-4 py-3 mt-6`}
           onClick={submeter}
         >
           {modo === 'login' ? 'Entrar' : 'Cadastrar'}
@@ -88,10 +91,9 @@ const Autenticacao = () => {
         <hr className={`my-6 border-gray-300 w-full`} />
 
         <button
-          className={`
-        w-full bg-red-500 hover:bg-red-400
-        text-white rounded-lg px-4 py-3`}
-          onClick={submeter}
+          className={`w-full bg-red-500 hover:bg-red-400
+            text-white rounded-lg px-4 py-3`}
+          onClick={loginGoogle}
         >
           Entrar com o Google
         </button>
@@ -101,7 +103,7 @@ const Autenticacao = () => {
             Novo por aqui?
             <a
               className={`text-blue-500 hover:text-blue-700 font-semibold
-              cursor-pointer pl-1`}
+                cursor-pointer pl-1`}
               onClick={() => setModo('cadastro')}
             >
               Crie uma conta gratuitamente
@@ -112,7 +114,7 @@ const Autenticacao = () => {
             Já tem cadastro?
             <a
               className={`text-blue-500 hover:text-blue-700 font-semibold
-              cursor-pointer pl-1`}
+                cursor-pointer pl-1`}
               onClick={() => setModo('login')}
             >
               Entre com seu login e senha
