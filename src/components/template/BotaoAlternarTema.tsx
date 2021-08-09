@@ -34,6 +34,7 @@ const BotaoAlternarTema = (props: BotaoAlternarTemaProps) => {
         bg-gradient-to-r from-gray-500 to-gray-900
         w-14 lg:w-24 h-8 p-1 rounded-full`}
     >
+      !!!
       <div
         className={`
           hidden lg:flex items-center mr-2
