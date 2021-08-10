@@ -9,6 +9,7 @@ import firebase from '../../firebase/config';
 interface AuthContextProps {
   usuario?: Usuario;
   loginGoogle?: () => Promise<void>;
+  logout?: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({});
@@ -48,9 +49,12 @@ export const AuthProvider: NextPage = ({children}) => {
   const [usuario, setUsuario] = useState<Usuario>();
 
   useEffect(() => {
-    // @ts-ignore
-    const cancelar = firebase.auth().onIdTokenChanged(configurarSessao);
-    return () => cancelar();
+    if (cookies.get('admin-template-cod3r-auth')) {
+      // @ts-ignore
+      const cancelar = firebase.auth().onIdTokenChanged(configurarSessao);
+      return () => cancelar();
+
+    }
   }, []);
 
   const configurarSessao = async (usuarioFirebase: firebase.User) => {
@@ -70,13 +74,29 @@ export const AuthProvider: NextPage = ({children}) => {
   };
 
   const loginGoogle = async () => {
-    const resp = await firebase
-    .auth()
-    .signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    try {
+      setCarregando(true);
+      const resp = await firebase
+      .auth()
+      .signInWithPopup(new firebase.auth.GoogleAuthProvider());
 
-    if (resp.user?.email) {
-      await configurarSessao(resp.user);
-      await route.push('/');
+      if (resp.user?.email) {
+        await configurarSessao(resp.user);
+        await route.push('/');
+      }
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      setCarregando(true);
+      await firebase.auth().signOut();
+      // @ts-ignore
+      await configurarSessao(null);
+    } finally {
+      setCarregando(false);
     }
   };
 
@@ -85,6 +105,7 @@ export const AuthProvider: NextPage = ({children}) => {
       value={{
         usuario,
         loginGoogle,
+        logout
       }}
     >
       {children}
