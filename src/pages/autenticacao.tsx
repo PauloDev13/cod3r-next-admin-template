@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import AuthInput from '../components/auth/AuthInput';
-import { IconeAtencao } from '../components/icons';
+import {IconeAtencao} from '../components/icons';
 import useAuthData from '../data/hook/useAuthData';
 
 const Autenticacao = () => {
-  const { usuario, loginGoogle } = useAuthData();
+  const {login, cadastrar, loginGoogle} = useAuthData();
 
   const [modo, setModo] = useState<'login' | 'cadastro'>('login');
   const [erro, setErro] = useState('');
@@ -16,13 +16,19 @@ const Autenticacao = () => {
     setTimeout(() => setErro(''), tempoEmSegundos * 1000);
   };
 
-  const submeter = () => {
-    if (modo === 'login') {
-      console.log('Login');
-      exibirErro('Ocorreu um erro no login');
-    } else {
-      console.log('Cadstrar');
-      exibirErro('Ocorreu um erro no cadastro');
+  const submeter = async () => {
+    try {
+      if (modo === 'login') {
+        await login?.(email, senha);
+      } else {
+        await cadastrar?.(email, senha);
+      }
+    } catch (e) {
+      if (e?.code.includes('auth/user-not-found')) {
+        exibirErro('Usuário não cadastrado! Crie uma conta ou entre com sua conta do Google.');
+      } else {
+        exibirErro('Usuário ou senha inválido!');
+      }
     }
   };
 
@@ -32,8 +38,8 @@ const Autenticacao = () => {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={`h-screen w-full object-cover`}
-          src='https://source.unsplash.com/random'
-          alt='Imagem da tela de autenticação'
+          src="https://source.unsplash.com/random"
+          alt="Imagem da tela de autenticação"
         />
       </div>
 
@@ -71,14 +77,14 @@ const Autenticacao = () => {
           valorMudou={setSenha}
           obrigatorio
         />
-        <AuthInput
-          tipo={'password'}
-          label={'Confirmar Senha'}
-          valor={senha}
-          valorMudou={setSenha}
-          obrigatorio={true}
-          naoRenderizar={modo === 'login'}
-        />
+        {/*<AuthInput*/}
+        {/*  tipo={'password'}*/}
+        {/*  label={'Confirmar Senha'}*/}
+        {/*  valor={senha}*/}
+        {/*  valorMudou={setSenha}*/}
+        {/*  obrigatorio={true}*/}
+        {/*  naoRenderizar={modo === 'login'}*/}
+        {/*/>*/}
 
         <button
           className={`w-full bg-indigo-500 hover:bg-indigo-400
@@ -88,7 +94,7 @@ const Autenticacao = () => {
           {modo === 'login' ? 'Entrar' : 'Cadastrar'}
         </button>
 
-        <hr className={`my-6 border-gray-300 w-full`} />
+        <hr className={`my-6 border-gray-300 w-full`}/>
 
         <button
           className={`w-full bg-red-500 hover:bg-red-400

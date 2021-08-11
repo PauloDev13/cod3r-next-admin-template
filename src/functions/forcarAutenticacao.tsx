@@ -28,7 +28,6 @@ const forcarAutenticacao = (jsx: JSX.Element) => {
   }
 
   function renderizarCarregando() {
-    // @ts-ignore
     return (
       <div className={`flex justify-center items-center h-screen`}>
         {/* eslint-disable-next-line jsx-a11y/alt-text */}
