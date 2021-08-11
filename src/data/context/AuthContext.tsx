@@ -8,6 +8,7 @@ import firebase from '../../firebase/config';
 
 interface AuthContextProps {
   usuario?: Usuario;
+  carregando?: boolean;
   loginGoogle?: () => Promise<void>;
   logout?: () => Promise<void>;
 }
@@ -54,6 +55,8 @@ export const AuthProvider: NextPage = ({children}) => {
       const cancelar = firebase.auth().onIdTokenChanged(configurarSessao);
       return () => cancelar();
 
+    } else {
+      setCarregando(false);
     }
   }, []);
 
@@ -104,6 +107,7 @@ export const AuthProvider: NextPage = ({children}) => {
     <AuthContext.Provider
       value={{
         usuario,
+        carregando,
         loginGoogle,
         logout
       }}
